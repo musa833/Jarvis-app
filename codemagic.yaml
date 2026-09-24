@@ -4,12 +4,19 @@ workflows:
     instance_type: mac_mini_m1
     environment:
       flutter: stable
+      vars:
+        FUTTER_SUPPRESS_ANALYTICS: true
+    triggering:
+      events:
+        - push
     scripts:
-      - name: 1. Create Android platform structure
-        script: flutter create . --platforms=android
-      - name: 2. Fetch packages manually
+      - name: 0. Clean workspace & Initialize Flutter platform
+        script: |
+          rm -rf android ios windows macos linux web
+          flutter create . --platforms=android
+      - name: 1. Get dependencies manually
         script: flutter pub get
-      - name: 3. Build Release APK
+      - name: 2. Build Release APK
         script: flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
