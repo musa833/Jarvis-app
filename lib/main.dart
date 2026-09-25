@@ -35,19 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final String baseUrl = "https://b09830eb-690d-4b39-b49c-dd51dbbb80a5-00-3rrioynzlqqmp.sisko.replit.dev/api";
   String _statusMessage = "Welcome to Jarvis! Tap a button to test.";
-  String _lastPostId = "87226288-578e-4615-96cb-4baa875b6e6b";
-
-  BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadBannerAd();
-  }
-
-  void _loadBannerAd() {
-    _bannerAd = BannerAd(
+  String _lastPostId = "87226288-578e-4615-96cb-4baa875b6e6b
       adUnitId: 'ca-app-pub-3940256099942544/6300978111',
       request: const AdRequest(),
       size: AdSize.banner,
