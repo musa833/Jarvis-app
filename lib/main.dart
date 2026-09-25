@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   runApp(const JarvisApp());
 }
 
@@ -15,6 +12,7 @@ class JarvisApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Jarvis AI Assistant',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
@@ -33,72 +31,59 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String baseUrl = "https://b09830eb-690d-4b39-b49c-dd51dbbb80a5-00-3rrioynzlqqmp.sisko.replit.dev/api";
-  String _statusMessage = "Welcome to Jarvis! Tap a button to test.";
-  String _lastPostId = "87226288-578e-4615-96cb-4baa875b6e6b
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      request: const AdRequest(),
-      size: AdSize.banner,
-        onAdLoaded: (ad) {
-          setState(() {
-            _isAdLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          ad.dispose();
-        },
-      ),
-    )..load();
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
+  final String baseUrl = "https://b09830eb-578e-4615-96cb-47201bc6f429.e2-us-east-8.custom.domain.com";
+  String _statusMessage = "Welcome to Jarvis! Tap a button below.";
+  String _lastPostId = "87226288-578e-4615-96cb-47201bc6f429";
 
   Future<void> _processVideo() async {
-    setState(() => _statusMessage = "Processing video...");
+    setState(() {
+      _statusMessage = "Processing video job...";
+    });
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/videos/process'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "video_url": "https://example.com/sample.mp4",
-          "effect": "cinematic"
-        }),
+        Uri.parse('$baseUrl/api/video/process'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'task': 'generate_celebration_video'}),
       );
-      
-      if (response.statusCode == 202) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        setState(() => _statusMessage = "Video Queued! Job ID: ${data['job_id']}");
+        setState(() {
+          _statusMessage = "Video Job Success: ${data.toString()}";
+        });
       } else {
-        setState(() => _statusMessage = "Failed: ${response.body}");
+        setState(() {
+          _statusMessage = "Failed: ${response.body}";
+        });
       }
     } catch (e) {
-      setState(() => _statusMessage = "Error: $e");
+      setState(() {
+        _statusMessage = "Error: $e";
+      });
     }
   }
 
   Future<void> _approvePost() async {
-    setState(() => _statusMessage = "Approving post...");
+    setState(() {
+      _statusMessage = "Approving post $_lastPostId...";
+    });
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/social/posts/$_lastPostId/approve'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "reviewer": "content-reviewer",
-          "note": "Approved via Flutter Mobile App"
-        }),
+        Uri.parse('$baseUrl/api/social/posts/$_lastPostId/approve'),
+        headers: {'Content-Type': 'application/json'},
       );
-      
       if (response.statusCode == 200) {
-        setState(() => _statusMessage = "Success! Post status: approved 🚀");
+        setState(() {
+          _statusMessage = "Post Approved Successfully (200 OK)!";
+        });
       } else {
-        setState(() => _statusMessage = "Approval Failed: ${response.body}");
+        setState(() {
+          _statusMessage = "Approval Failed: ${response.body}";
+        });
       }
     } catch (e) {
-      setState(() => _statusMessage = "Error: $e");
+      setState(() {
+        _statusMessage = "Error: $e";
+      });
     }
   }
 
@@ -115,19 +100,19 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(Icons.smart_toy, size: 80, color: Colors.deepPurpleAccent),
-            const SizedBox(height: 20),
             Text(
               _statusMessage,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 40),
             ElevatedButton.icon(
               onPressed: _processVideo,
               icon: const Icon(Icons.video_collection),
               label: const Text('Process Video Job'),
-              style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(15)),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(15),
+              ),
             ),
             const SizedBox(height: 15),
             ElevatedButton.icon(
@@ -142,7 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      
     );
   }
 }
