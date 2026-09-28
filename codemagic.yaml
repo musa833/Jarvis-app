@@ -9,7 +9,10 @@ workflows:
         script: flutter create . --platforms=android
       - name: Get dependencies
         script: flutter pub get
-      - name: Build Release APK
-        script: flutter build apk --release
+      - - name: Build Release APK
+      script: |
+        flutter clean
+        flutter pub get
+        flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
