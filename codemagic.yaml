@@ -10,7 +10,7 @@ workflows:
       - name: Get dependencies
         script: flutter pub get
       - name: Build Release APK
-    script: |
+        script: |
         flutter clean
         flutter pub get
         flutter build apk --release
