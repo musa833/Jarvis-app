@@ -9,7 +9,7 @@ workflows:
         script: flutter create . --platforms=android
       - name: Get dependencies
         script: flutter pub get
-       - name: Build Release APK
+      - name: Build Release APK
       script: |
         flutter clean
         flutter pub get
