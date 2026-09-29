@@ -31,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String baseUrl = final String baseUrl = "https://busy-buckets-shop.loca.lt";
+ final String baseUrl = "https://busy-buckets-shop.loca.lt";
   String _statusMessage = "Welcome to Jarvis! Tap a button below.";
   String _lastPostId = "87226288-578e-4615-96cb-47201bc6f429";
 
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/video/process'),
+        Uri.parse('$baseURL/api/video/process'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'task': 'generate_celebration_video'}),
       );
