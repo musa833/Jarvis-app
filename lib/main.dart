@@ -31,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
- final String baseURL = "https://busy-buckets-shop.loca.lt";
+ final String baseURL = "https://b09830eb-690d-4b39-b49c-dd51dbbb80a5-00-3rrioynzlqqmp.sisko.replit.dev/api";
   String _statusMessage = "Welcome to Jarvis! Tap a button below.";
   String _lastPostId = "87226288-578e-4615-96cb-47201bc6f429";
 
