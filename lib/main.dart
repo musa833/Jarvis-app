@@ -31,9 +31,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
- final String baseURL = "https://b09830eb-690d-4b39-b49c-dd51dbbb80a5-00-3rrioynzlqqmp.sisko.replit.dev/api";
-  String _statusMessage = "Welcome to Jarvis! Tap a button below.";
-  String _lastPostId = "87226288-578e-4615-96cb-47201bc6f429";
+  // Yahan variable ka naam bilkul theek rakh diya gaya hai (baseURL)
+  final String baseURL = "https://b09830eb-690d-4b39-9598-f2b7f75f9037.loca.lt";
+  String _statusMessage = "Welcome to Jarvis! Tap a button to start.";
+  String _lastPostId = "87226288-578e-4615-96cb-47206b12a32c";
 
   Future<void> _processVideo() async {
     setState(() {
@@ -43,16 +44,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final response = await http.post(
         Uri.parse('$baseURL/api/video/process'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'task': 'generate_celebration_video'}),
+        body: jsonEncode({'task': 'generate_celebration'}),
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
         setState(() {
-          _statusMessage = "Video Job Success: ${data.toString()}";
+          _statusMessage = "Video Job Successful!";
         });
       } else {
         setState(() {
-          _statusMessage = "Failed: ${response.body}";
+          _statusMessage = "Failed: ${response.statusCode}";
         });
       }
     } catch (e) {
@@ -64,20 +64,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _approvePost() async {
     setState(() {
-      _statusMessage = "Approving post $_lastPostId...";
+      _statusMessage = "Approving post...";
     });
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/social/posts/$_lastPostId/approve'),
+        Uri.parse('$baseURL/api/social/approve/$_lastPostId'),
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
         setState(() {
-          _statusMessage = "Post Approved Successfully (200 OK)!";
+          _statusMessage = "Post Approved Successfully!";
         });
       } else {
         setState(() {
-          _statusMessage = "Approval Failed: ${response.body}";
+          _statusMessage = "Approval Failed: ${response.statusCode}";
         });
       }
     } catch (e) {
@@ -92,37 +92,26 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Jarvis AI Assistant'),
-        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               _statusMessage,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
+            const SizedBox(height: 30),
+            ElevatedButton(
               onPressed: _processVideo,
-              icon: const Icon(Icons.video_collection),
-              label: const Text('Process Video Job'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(15),
-              ),
+              child: const Text('Process Video Job'),
             ),
             const SizedBox(height: 15),
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: _approvePost,
-              icon: const Icon(Icons.check_circle_outline),
-              label: const Text('Approve Social Post Manually'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(15),
-                backgroundColor: Colors.green[700],
-              ),
+              child: const Text('Approve Last Social Post'),
             ),
           ],
         ),
